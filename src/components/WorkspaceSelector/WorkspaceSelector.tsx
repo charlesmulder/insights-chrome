@@ -11,8 +11,9 @@ const WorkspaceSelector = (): React.JSX.Element | null => {
   const setSelectedWorkspace = useSetAtom(selectedWorkspaceAtom);
 
   const onSelect = useCallback(
-    (workspace: { id?: string; name?: string }) => {
-      if (workspace.id && workspace.name) {
+    (item: { workspace?: { id?: string; name?: string } }) => {
+      const workspace = item.workspace;
+      if (workspace?.id && workspace?.name) {
         setSelectedWorkspace({ id: workspace.id, name: workspace.name } satisfies SelectedWorkspace);
       }
     },

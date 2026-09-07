@@ -5,7 +5,7 @@ import WorkspaceSelector from './WorkspaceSelector';
 import { selectedWorkspaceAtom } from '../../state/atoms/workspaceSelectorAtom';
 
 type WorkspaceSelectorRemoteProps = {
-  onSelect?: (workspace: { id?: string; name?: string }) => void;
+  onSelect?: (item: { workspace?: { id?: string; name?: string } }) => void;
   scope?: string;
   module?: string;
   ErrorComponent?: React.ReactElement;
@@ -92,14 +92,21 @@ describe('WorkspaceSelector', () => {
   it('should update selectedWorkspaceAtom when onSelect is called', () => {
     mockUseFlag.mockReturnValue(true);
     const { store } = renderComponent();
-    capturedProps?.onSelect?.({ id: 'ws-1', name: 'Production' });
+    capturedProps?.onSelect?.({ workspace: { id: 'ws-1', name: 'Production' } });
     expect(store.get(selectedWorkspaceAtom)).toEqual({ id: 'ws-1', name: 'Production' });
   });
 
   it('should not update atom when workspace has missing fields', () => {
     mockUseFlag.mockReturnValue(true);
     const { store } = renderComponent();
-    capturedProps?.onSelect?.({ id: 'ws-1' });
+    capturedProps?.onSelect?.({ workspace: { id: 'ws-1' } });
+    expect(store.get(selectedWorkspaceAtom)).toBeUndefined();
+  });
+
+  it('should not update atom when workspace field is missing entirely', () => {
+    mockUseFlag.mockReturnValue(true);
+    const { store } = renderComponent();
+    capturedProps?.onSelect?.({});
     expect(store.get(selectedWorkspaceAtom)).toBeUndefined();
   });
 });
